@@ -1,33 +1,51 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
-const value1 = Math.floor(Math.random() * 100);
-const value2 = Math.floor(Math.random() * 100);
-const value3 = Math.floor(Math.random() * 100);
-const proposedAnswer = Math.floor(Math.random() * 3) + value1 + value2 + value3;
-const numQuestions = 0;
-const numCorrect = 0;
+import Game from './Game'
 
 class App extends Component {
-  render() {
+
+  state = {
+    xyz: {
+      x: Math.floor(Math.random() * 100),
+      y: Math.floor(Math.random() * 100),
+      z: Math.floor(Math.random() * 100)
+    },
+    score: {
+      numQuestions: 0,
+      numCorrect: 0
+    }
+  }
+
+  checkAnswer = (p, a) => {
+    const sum = this.state.xyz.x + this.state.xyz.y + this.state.xyz.z
+    const result = sum===p
+    
+    this.setState((currentState) => ({
+      xyz: {
+        x: Math.floor(Math.random() * 100),
+        y: Math.floor(Math.random() * 100),
+        z: Math.floor(Math.random() * 100)
+      },
+      score: {
+        numQuestions: currentState.score.numQuestions + 1,
+        numCorrect: result===a? currentState.score.numCorrect + 1 : currentState.score.numCorrect
+      }
+    }))
+
+  }
+render() {
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">ReactND - Coding Practice</h1>
         </header>
-        <div className="game">
-          <h2>Mental Math</h2>
-          <div className="equation">
-            <p className="text">{`${value1} + ${value2} + ${value3} = ${proposedAnswer}`}</p>
-          </div>
-          <button>True</button>
-          <button>False</button>
-          <p className="text">
-            Your Score: {numCorrect}/{numQuestions}
-          </p>
-        </div>
+        <Game 
+          xyz={this.state.xyz} 
+          score={this.state.score}
+          onCheckAnswer={this.checkAnswer}
+        />
       </div>
     );
   }
